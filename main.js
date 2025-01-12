@@ -1,3 +1,4 @@
+const weatherAPIURL = `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}&units=metric`;
 const galleryImages = [
   {
     src: "./assets/gallery/image1.jpg",
@@ -83,23 +84,40 @@ function greetingHandler() {
     greetingText = "Good evening!";
   } else greetingText = "Welcome";
 
-  const weatherCondition = "sunny";
-  const userLocation = "New York";
-  let temperature = 22.8673;
-  let celsiusText = `The weather is ${weatherCondition} in ${userLocation} and it\'s ${temperature.toFixed(1)}°C outside.`;
-  let fahrText = `The weather is ${weatherCondition} in ${userLocation} and it\'s ${celsiusToFahr(temperature).toFixed(1)}°F outside.`;
-
   document.querySelector("#greeting").innerHTML = greetingText;
-  document.querySelector("p#weather").innerHTML = celsiusText;
-
-  // Temperature °C/°F Switch
-
-  document.querySelector(".weather-group").addEventListener("click", (e) => {
-    if (e.target.id == "celsius") document.querySelector("p#weather").innerHTML = celsiusText;
-    if (e.target.id == "fahr") document.querySelector("p#weather").innerHTML = fahrText;
-  });
 }
 
+// Weather Text
+
+function weatherHandler() {
+  navigator.geolocation.getCurrentPosition((position) => {
+    let latitude = position.coords.latitude;
+    let longitude = position.coords.longitude;
+    let url = weatherAPIURL.replace("{lat}", latitude).replace("{lon}", longitude).replace("{API key}", weatherAPIKey);
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        const condition = data.weather[0].description;
+        const location = data.name;
+        const temperature = data.main.temp;
+
+        let celsiusText = `The weather is ${condition} in ${location} and it\'s ${temperature.toFixed(1)}°C outside.`;
+        let fahrText = `The weather is ${condition} in ${location} and it\'s ${celsiusToFahr(temperature).toFixed(1)}°F outside.`;
+
+        document.querySelector("p#weather").innerHTML = celsiusText;
+
+        // Temperature °C/°F Switch
+
+        document.querySelector(".weather-group").addEventListener("click", (e) => {
+          if (e.target.id == "celsius") document.querySelector("p#weather").innerHTML = celsiusText;
+          if (e.target.id == "fahr") document.querySelector("p#weather").innerHTML = fahrText;
+        });
+      })
+      .catch((err) => {
+        document.querySelector("p#weather").innerHTML = "Unable to get the weather info. Try again later.";
+      });
+  });
+}
 // Local Time Section
 
 function clockHandler() {
@@ -195,12 +213,8 @@ function populateProducts(productList) {
   });
 }
 function productsHandler() {
-  let freeProducts = products.filter(function (item) {
-    return !item.price || item.price <= 0;
-  });
-  let paidProducts = products.filter(function (item) {
-    return item.price > 0;
-  });
+  let freeProducts = products.filter((item) => !item.price || item.price <= 0);
+  let paidProducts = products.filter((item) => item.price > 0);
 
   populateProducts(products);
 
@@ -229,3 +243,4 @@ clockHandler();
 galleryHandler();
 productsHandler();
 footerHandler();
+weatherHandler();
