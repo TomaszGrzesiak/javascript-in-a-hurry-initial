@@ -1,67 +1,4 @@
-// Main Section
-
-document.querySelector("#open-nav-menu").addEventListener("click", function () {
-  document.querySelector("header nav .wrapper").classList.add("nav-open");
-});
-
-document
-  .querySelector("#close-nav-menu")
-  .addEventListener("click", function () {
-    document.querySelector("header nav .wrapper").classList.remove("nav-open");
-  });
-
-// Greeting Section
-
-function celsiusToFahr(temperature) {
-  return (temperature * 9) / 5 + 32;
-}
-
-const greetingText = "Good aternoon!";
-const weatherCondition = "sunny";
-const userLocation = "New York";
-let temperature = 22.8673;
-let celsiusText = `The weather is ${weatherCondition} in ${userLocation} and it\'s ${temperature.toFixed(
-  1
-)}°C outside.`;
-let fahrText = `The weather is ${weatherCondition} in ${userLocation} and it\'s ${celsiusToFahr(
-  temperature
-).toFixed(1)}°F outside.`;
-
-document.querySelector("#greeting").innerHTML = greetingText;
-document.querySelector("p#weather").innerHTML = celsiusText;
-
-//console.log(temperature.toFixed(1) + `°C = ${celsiusToFahr(temperature).toFixed(1)} °F`)
-
-document.querySelector(".weather-group").addEventListener("click", (e) => {
-  if (e.target.id == "celsius")
-    document.querySelector("p#weather").innerHTML = celsiusText;
-  if (e.target.id == "fahr")
-    document.querySelector("p#weather").innerHTML = fahrText;
-});
-
-setInterval(function () {
-  let localTime = new Date();
-  document.querySelector("span[data-time=hours]").textContent = localTime
-    .getHours()
-    .toString()
-    .padStart(2, 0);
-  document.querySelector("span[data-time=minutes]").textContent = localTime
-    .getMinutes()
-    .toString()
-    .padStart(2, 0);
-  document.querySelector("span[data-time=seconds]").textContent = localTime
-    .getSeconds()
-    .toString()
-    .padStart(2, 0);
-}, 1000);
-
-// Gallery Section
-
 const galleryImages = [
-  {
-    src: "./assets/gallery/img1.png",
-    alt: "Thumbnail Image 0",
-  },
   {
     src: "./assets/gallery/image1.jpg",
     alt: "Thumbnail Image 1",
@@ -76,23 +13,219 @@ const galleryImages = [
   },
 ];
 
-let mainImage = document.querySelector("#gallery > img");
-let thumbnails = document.querySelector("#gallery .thumbnails");
+const products = [
+  {
+    title: "AstroFiction",
+    author: "John Doe",
+    price: 49.9,
+    image: "./assets/products/img6.png",
+  },
+  {
+    title: "Space Odissey",
+    author: "Marie Anne",
+    price: 35,
+    image: "./assets/products/img1.png",
+  },
+  {
+    title: "Doomed City",
+    author: "Jason Cobert",
+    image: "./assets/products/img2.png",
+  },
+  {
+    title: "Black Dog",
+    author: "John Doe",
+    price: 85.35,
+    image: "./assets/products/img3.png",
+  },
+  {
+    title: "My Little Robot",
+    author: "Pedro Paulo",
+    price: 0,
+    image: "./assets/products/img5.png",
+  },
+  {
+    title: "Garden Girl",
+    author: "Ankit Patel",
+    price: 45,
+    image: "./assets/products/img4.png",
+  },
+];
 
-mainImage.src = galleryImages[0].src;
-mainImage.alt = galleryImages[0].alt;
+// Main Section
 
-{
-  /* <img src="./assets/gallery/image1.jpg"
-alt="Thumbnail Image 1"
-data-array-index="0" data-selected="true"/> */
+function menuHandler() {
+  document.querySelector("#open-nav-menu").addEventListener("click", function () {
+    document.querySelector("header nav .wrapper").classList.add("nav-open");
+  });
+
+  document.querySelector("#close-nav-menu").addEventListener("click", function () {
+    document.querySelector("header nav .wrapper").classList.remove("nav-open");
+  });
 }
 
-galleryImages.forEach(function (image, index) {
-  let thumb = document.createElement("img");
-  thumb.src = image.src;
-  thumb.alt = image.alt;
-  thumb.dataset.arrayIndex = index;
-  thumb.dataset.selected = false;
-  thumbnails.appendChild(thumb);
-});
+// Temperature Converter
+
+function celsiusToFahr(temperature) {
+  return (temperature * 9) / 5 + 32;
+}
+
+// Greeting Section
+
+function greetingHandler() {
+  let currentHour = new Date().getHours();
+  let greetingText;
+
+  if (currentHour < 12) {
+    greetingText = "Good morning!";
+  } else if (currentHour < 19) {
+    greetingText = "Good afternoon!";
+  } else if (currentHour <= 24) {
+    greetingText = "Good evening!";
+  } else greetingText = "Welcome";
+
+  const weatherCondition = "sunny";
+  const userLocation = "New York";
+  let temperature = 22.8673;
+  let celsiusText = `The weather is ${weatherCondition} in ${userLocation} and it\'s ${temperature.toFixed(1)}°C outside.`;
+  let fahrText = `The weather is ${weatherCondition} in ${userLocation} and it\'s ${celsiusToFahr(temperature).toFixed(1)}°F outside.`;
+
+  document.querySelector("#greeting").innerHTML = greetingText;
+  document.querySelector("p#weather").innerHTML = celsiusText;
+
+  // Temperature °C/°F Switch
+
+  document.querySelector(".weather-group").addEventListener("click", (e) => {
+    if (e.target.id == "celsius") document.querySelector("p#weather").innerHTML = celsiusText;
+    if (e.target.id == "fahr") document.querySelector("p#weather").innerHTML = fahrText;
+  });
+}
+
+// Local Time Section
+
+function clockHandler() {
+  setInterval(function () {
+    let localTime = new Date();
+    document.querySelector("span[data-time=hours]").textContent = localTime.getHours().toString().padStart(2, 0);
+    document.querySelector("span[data-time=minutes]").textContent = localTime.getMinutes().toString().padStart(2, 0);
+    document.querySelector("span[data-time=seconds]").textContent = localTime.getSeconds().toString().padStart(2, 0);
+  }, 1000);
+}
+
+// Gallery Section
+
+function galleryHandler() {
+  let mainImage = document.querySelector("#gallery > img");
+  let thumbnails = document.querySelector("#gallery .thumbnails");
+
+  mainImage.src = galleryImages[0].src;
+  mainImage.alt = galleryImages[0].alt;
+
+  galleryImages.forEach(function (image, index) {
+    let thumb = document.createElement("img");
+    thumb.src = image.src;
+    thumb.alt = image.alt;
+    thumb.dataset.arrayIndex = index;
+    //thumb.dataset.selected = false;
+    thumb.dataset.selected = index === 0 ? true : false;
+
+    thumb.addEventListener("click", (e) => {
+      let selectedIndex = e.target.dataset.arrayIndex;
+      let selectedImage = galleryImages[selectedIndex];
+      mainImage.src = selectedImage.src;
+      mainImage.alt = selectedImage.alt;
+
+      thumbnails.querySelectorAll("img").forEach((img) => {
+        img.dataset.selected = false;
+      });
+
+      e.target.dataset.selected = true;
+    });
+
+    thumbnails.appendChild(thumb);
+  });
+}
+
+// Products Section
+
+function populateProducts(productList) {
+  let productsSection = document.querySelector(".products-area");
+  productsSection.textContent = "";
+
+  // Run a loop through the products and create an HTML element ("product-item") for each of them
+  productList.forEach(function (product, index) {
+    // Create the HTML element for the individual product
+    let productElm = document.createElement("div");
+    productElm.classList.add("product-item");
+
+    // Create the product image
+    let productImage = document.createElement("img");
+    productImage.src = product.image;
+    productImage.alt = "Image for " + product.title;
+
+    // Create the product details section
+    let productDetails = document.createElement("div");
+    productDetails.classList.add("product-details");
+
+    // Create product title, author, price-title and price
+    let productTitle = document.createElement("h3");
+    productTitle.classList.add("product-title");
+    productTitle.textContent = product.title;
+    let productAuthor = document.createElement("p");
+    productAuthor.classList.add("product-author");
+    productAuthor.textContent = product.author;
+    let priceTitle = document.createElement("p");
+    priceTitle.classList.add("price-title");
+    priceTitle.textContent = "Price";
+    let productPrice = document.createElement("p");
+    productPrice.classList.add("product-price");
+    productPrice.textContent = product.price > 0 ? "$" + product.price.toFixed(2) : "Free";
+
+    // Append the product details
+    productDetails.append(productTitle);
+    productDetails.append(productAuthor);
+    productDetails.append(priceTitle);
+    productDetails.append(productPrice);
+
+    // Add all child HTML elements of the product
+    productElm.append(productImage);
+    productElm.append(productDetails);
+
+    // Add complete individual product to the product section
+    productsSection.append(productElm);
+  });
+}
+function productsHandler() {
+  let freeProducts = products.filter(function (item) {
+    return !item.price || item.price <= 0;
+  });
+  let paidProducts = products.filter(function (item) {
+    return item.price > 0;
+  });
+
+  populateProducts(products);
+
+  document.querySelector(".products-filter label[for=all] span.product-amount").textContent = products.length;
+  document.querySelector(".products-filter label[for=free] span.product-amount").textContent = freeProducts.length;
+  document.querySelector(".products-filter label[for=paid] span.product-amount").textContent = paidProducts.length;
+
+  let productsFilter = document.querySelector("#products > div.products-filter");
+  productsFilter.addEventListener("click", function (e) {
+    if (e.target.id === "all") populateProducts(products);
+    if (e.target.id === "paid") populateProducts(paidProducts);
+    if (e.target.id === "free") populateProducts(freeProducts);
+  });
+}
+
+function footerHandler() {
+  let currentYear = new Date().getFullYear();
+  document.querySelector("body > footer").textContent = `© ${currentYear} - All rights reserved.`;
+}
+
+// Page Load
+
+menuHandler();
+greetingHandler();
+clockHandler();
+galleryHandler();
+productsHandler();
+footerHandler();
